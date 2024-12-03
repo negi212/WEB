@@ -12,21 +12,35 @@
         <input type="text" id="inputText" name="inputText">
         <button type="button" onclick="replaceText()">決定</button>
     </form>
-    <p id="result"></p>
-    <button id="copyButton" style="display:none;" onclick="copyToClipboard()">コピー</button>
+    <div id="results"></div>
 
     <script>
+        const templates = [
+            "{input}ちゃん🌸🌟おっはよぉぉ～～～☀️😆💓✨今日はどんな気分カナ？💭😊おじさんはね、朝から{input}ちゃんのこと思い出してニヤニヤしてるよ😚💕笑　{input}ちゃんの笑顔はね、ほんとに世界一だよ🥹💖✨\n最近寒いけど、ちゃんとモコモコのやつ着てる？🧥🧣🧤風邪ひいたらダメだよ🥺💦おじさん、心配で夜も眠れなくなっちゃうからね！😵‍💫🛌💔\nそういえばね、この間ね、めっちゃ可愛いカフェ見つけちゃったの😳☕🍰✨今度{input}ちゃんと行けたら最高だなぁ～って妄想してたの🙈💕💭これって運命かな？🥹💘なんちゃって～🤣💦じゃあ、今日もいっぱい笑って、いっぱい元気でいてね💪🌈✨{input}ちゃんの笑顔が世界を明るくするんだから🥰🌟またね～～～✋💌💕",
+            "🌞☀️おはよう{input}ちゃん🎶✨\n今日も元気いっぱいでがんばろうね💪🔥💥\nおじさんはね、朝ごはんに🥐☕️食べたよ〜❣️\n{input}ちゃんは何食べたのかなぁ⁉️🤔💖\n教えてくれるとうれしいなぁ〜😊💌",
+            "{input}ちゃん💗💫こんばんわ🌙⭐️\nお仕事📊✨や学校🏫✏️おつかれさま〜💐💕\n夜はもう寒いから、しっかり暖かくしてね🧣🔥❄️\nおじさんは今、ココア☕️飲みながら君を想ってるよ☺️💘",
+            "{input}ちゃん〜！🐤🌟\nさっきね、めっちゃかわいい猫😺💕見つけて\n「これ、{input}ちゃんに似てる！」って思っちゃったの😳💖\nおじさんの目は確かだからね👀✨信じていいよ🤣🎵",
+            "👋😆やっほ〜{input}ちゃん❣️💖\n今日はおじさん、めっちゃハードな1日だったんだ💦💼\nでもね、{input}ちゃんの笑顔を想像したら👩‍🎤💓元気出たの😆✨\n本当にありがとう〜！🤗💐これからもよろしくねっ🐥💝"
+        ];
+
         function replaceText() {
             const inputText = document.getElementById('inputText').value;
-            const templateString = "{input}ちゃん🌸🌟おっはよぉぉ～～～☀️😆💓✨今日はどんな気分カナ？💭😊おじさんはね、朝から{input}ちゃんのこと思い出してニヤニヤしてるよ😚💕笑　{input}ちゃんの笑顔はね、ほんとに世界一だよ🥹💖✨\n最近寒いけど、ちゃんとモコモコのやつ着てる？🧥🧣🧤風邪ひいたらダメだよ🥺💦おじさん、心配で夜も眠れなくなっちゃうからね！😵‍💫🛌💔\nそういえばね、この間ね、めっちゃ可愛いカフェ見つけちゃったの😳☕🍰✨今度{input}ちゃんと行けたら最高だなぁ～って妄想してたの🙈💕💭これって運命かな？🥹💘なんちゃって～🤣💦じゃあ、今日もいっぱい笑って、いっぱい元気でいてね💪🌈✨{input}ちゃんの笑顔が世界を明るくするんだから🥰🌟またね～～～✋💌💕";
-            const resultString = templateString.split("{input}").join(inputText);
-            document.getElementById('result').innerText = resultString;
-            document.getElementById('copyButton').style.display = 'inline-block';
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            templates.forEach(template => {
+                const resultString = template.split("{input}").join(inputText);
+                const p = document.createElement('p');
+                p.innerText = resultString;
+                const copyButton = document.createElement('button');
+                copyButton.innerText = 'コピー';
+                copyButton.onclick = () => copyToClipboard(resultString);
+                resultsDiv.appendChild(p);
+                resultsDiv.appendChild(copyButton);
+            });
         }
 
-        function copyToClipboard() {
-            const resultText = document.getElementById('result').innerText;
-            navigator.clipboard.writeText(resultText).then(() => {
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
                 alert('クリップボードにコピーしました!');
             }).catch(err => {
                 alert('コピーに失敗しました: ' + err);
