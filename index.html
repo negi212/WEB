@@ -4,34 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>おじさん構文メーカー</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #genreButtons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #genreButtons button {
+            margin: 5px;
+        }
+        #results {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #results h2 {
+            color: #28a745;
+        }
+        #results p {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        #results button {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>おじさん構文メーカー</h1>
     <form id="inputForm">
-        <label for="inputText">名前を入力してください:</label>
-        <input type="text" id="inputText" name="inputText">
+        <input type="text" id="inputText" placeholder="名前を入力してください" name="inputText">
         <button type="button" onclick="replaceText()">決定</button>
     </form>
+    <div id="genreButtons" style="display: none;">
+        <button type="button" onclick="filterTemplates('朝')">朝</button>
+        <button type="button" onclick="filterTemplates('昼')">昼</button>
+        <button type="button" onclick="filterTemplates('夜')">夜</button>
+        <button type="button" onclick="filterTemplates('カジュアル')">カジュアル</button>
+        <button type="button" onclick="filterTemplates('説教')">説教</button>
+        <button type="button" onclick="filterTemplates('謝罪')">謝罪</button>
+        <button type="button" onclick="filterTemplates('褒める')">褒める</button>
+    </div>
     <div id="results"></div>
 
     <script>
-        const templates = {
-            morning: [
-                "{input}ちゃん🌸🌟おっはよぉぉ～～～☀️😆💓✨今日はどんな気分カナ？💭😊おじさんはね、朝から{input}ちゃんのこと思い出してニヤニヤしてるよ😚💕笑　{input}ちゃんの笑顔はね、ほんとに世界一だよ🥹💖✨\n最近寒いけど、ちゃんとモコモコのやつ着てる？🧥🧣🧤風邪ひいたらダメだよ🥺💦おじさん、心配で夜も眠れなくなっちゃうからね！😵‍💫🛌💔\nそういえばね、この間ね、めっちゃ可愛いカフェ見つけちゃったの😳☕🍰✨今度{input}ちゃんと行けたら最高だなぁ～って妄想してたの🙈💕💭これって運命かな？🥹💘なんちゃって～🤣💦じゃあ、今日もいっぱい笑って、いっぱい元気でいてね💪🌈✨{input}ちゃんの笑顔が世界を明るくするんだから🥰🌟またね～～～✋💌💕",
-                "🌞☀️おはよう{input}ちゃん🎶✨\n今日も元気いっぱいでがんばろうね💪🔥💥\nおじさんはね、朝ごはんに🥐☕️食べたよ〜❣️\n{input}ちゃんは何食べたのかなぁ⁉️🤔💖\n教えてくれるとうれしいなぁ〜😊💌"
+        const templateData = {
+            朝: [
+                "{input}ちゃん🌸🌟おっはよぉぉ～～～☀️😆💓✨今日はどんな気分カナ？💭😊おじさんはね、朝から{input}ちゃんのこと思い出してニヤニヤしてるよ😚💕笑　{input}ちゃんの笑顔はね、ほんとに世界一だよ🥹💖✨\n最近寒いけど、ちゃんとモコモコのやつ着てる？🧥🧣🧤風邪ひいたらダメだよ🥺💦おじさん、心配で夜も眠れなくなっちゃうからね！😵‍💫🛌💔\nそういえばね、この間ね、めっちゃ可愛いカフェ見つけちゃったの😳☕🍰✨今度{input}ちゃんと行けたら最高だなぁ～って妄想してたの🙈💕💭これって運命カナ？🥹💘なんちゃって～🤣💦じゃあ、今日もいっぱい笑って、いっぱい元気でいてね💪🌈✨{input}ちゃんの笑顔が世界を明るくするんだから🥰🌟またね～～～✋💌💕",
+                "🌞☀️おはよう{input}ちゃん🎶✨\n今日も元気いっぱいでがんばろうね💪🔥💥\nおじさんはね、朝ごはんに🥐☕️食べたよ〜❣️\n{input}ちゃんは何食べたのカナぁ⁉️🤔💖\n教えてくれるとうれしいなぁ〜😊💌",
+                "おはよ〜初樹ちゃん❣️☀️🌸\n今日も朝から元気に行こうね💪✨\n君の笑顔で、みんなハッピーになること間違いなしだよ‼️😊💖",
+                "初樹ちゃん🌞✨おっはよ〜〜‼️🎶\n朝日がキラキラしてるけど、それ以上に君の方が輝いてるよ❣️🌟💖\n今日も素敵な1日になりますように〜🍀✨",
+                "おはよう〜‼️😆✨\nちゃんと朝ごはん食べた⁉️🍳🍞☕️\nおじさんは君が心配でたまらないんだよ〜💦💖\n今日も一日頑張ろうね❗😍😘",
             ],
-            evening: [
+            昼: [
+                "{input}ちゃん🌸🌟こんにちは〜〜〜🎶😆💖\nお昼ご飯、何食べたのカナ⁉️🍱🍣🍜\nおじさんはね、今日はカレー🍛食べたよ〜❣️💕\n{input}ちゃんの好きなもの、おじさんも知りたいなぁ〜🤔💭💖\n今日も頑張ってるね💪🔥✨",
+                "やっほ〜‼️😆☀️\nお仕事や学校、順調に進んでる⁉️💼✨\n無理しすぎずに頑張ってね💪🔥応援してるよ〜📣❣️",
+                "初樹ちゃん❣️🌟\n午後の予定はどう❓📅✨\nおじさんは君が頑張ってる姿を想像して、力もらってるよ〜‼️🙌💖",
+                "お昼も過ぎたけど、疲れてない⁉️💦😲\nもし疲れたら、少し休憩してね🍵🌿✨\n君が元気でいることが、何より大事だから〜😊💖",
+                "ちょっと、初樹ちゃん❣️😳✨\n午後からも集中して頑張っちゃう感じ⁉️💼💪\nさすがだな〜✨君は本当にすごいよ🎉💖",
+            ],
+            夜: [
                 "{input}ちゃん💗💫こんばんわ🌙⭐️\nお仕事📊✨や学校🏫✏️おつかれさま〜💐💕\n夜はもう寒いから、しっかり暖かくしてね🧣🔥❄️\nおじさんは今、ココア☕️飲みながら君を想ってるよ☺️💘",
-                "こんばんは〜{input}ちゃん🌙✨\n星空見上げてたら🌟💫、「あっ！{input}ちゃんみたいに輝いてる！」って思っちゃった😳💖\nおじさんね、星占い🔮とか信じちゃうタイプだから、\n「今日も{input}ちゃんに良いことありますように！」ってお願いしたよ🙏💝"
+                "こんばんは〜{input}ちゃん🌙✨\n星空見上げてたら🌟💫、「あっ！{input}ちゃんみたいに輝いてる！」って思っちゃった😳💖\nおじさんね、星占い🔮とか信じちゃうタイプだから、\n「今日も{input}ちゃんに良いことありますように！」ってお願いしたよ🙏💝",
+                "初樹ちゃん、1日お疲れさま〜‼️🌙✨\n今日もいっぱい頑張ったね😌💖\n夜はゆっくりリラックスして、しっかり休むんだよ〜🛌💤",
+                "こんばんは〜❣️🌟\n初樹ちゃん、夜ごはんは何食べたのかな❓🍛🍣🍰✨\nおじさんはね、君の笑顔を思い出しながらごはん食べたよ😳💖",
+                "初樹ちゃん🌙✨\nそろそろ寝る準備してるかな❓🛏️💤\nおじさんもそろそろ寝るけど、夢で会えたらいいな〜❣️😊💖",
             ],
-            casual: [
+            カジュアル: [
                 "{input}ちゃん〜！🐤🌟\nさっきね、めっちゃかわいい猫😺💕見つけて\n「これ、{input}ちゃんに似てる！」って思っちゃったの😳💖\nおじさんの目は確かだからね👀✨信じていいよ🤣🎵",
-                "👋😆やっほ〜{input}ちゃん❣️💖\n今日はおじさん、めっちゃハードな1日だったんだ💦💼\nでもね、{input}ちゃんの笑顔を想像したら👩‍🎤💓元気出たの😆✨\n本当にありがとう〜！🤗💐これからもよろしくねっ🐥💝"
+                "👋😆やっほ〜{input}ちゃん❣️💖\n今日はおじさん、めっちゃハードな1日だったんだ💦💼\nでもね、{input}ちゃんの笑顔を想像したら👩‍🎤💓元気出たの😆✨\n本当にありがとう〜！🤗💐これからもよろしくねっ🐥💝",
+                "やっほー初樹ちゃん！😆✨\n今日もめっちゃ頑張ってるね〜！💪🔥\nその調子で、どんどん輝いちゃえ〜✨🌟\nおじさんも応援してるよ📣💖",
+                "初樹ちゃん〜🎶😊\n最近何か楽しいことあった⁉️💡✨\nおじさん、君の笑顔が見たくて仕方ないんだよ〜😳💖\nまた楽しい話、いっぱい聞かせてね〜🎉🌈",
+                "おーい初樹ちゃん❗️😄✨\n今日はどんな1日だったのカナ❓💭☀️\nおじさんはね、君が元気でいてくれるだけでハッピーなんだよ〜❣️💓\nまた話せるの楽しみにしてるからね〜🙌💐",
             ],
-            concern: [
-                "{input}ちゃん！😤💦ちょっとだけおじさん、言わせてほしいの🥺🙏最近、なんだか無理してるんじゃないかなぁ～？😣💦昨日だって、遅くまで起きてたでしょ⁉️🌙😡ちゃんと寝ないと、お肌にも良くないし💔🥹疲れたら{input}ちゃんの可愛い笑顔が曇っちゃうよ😭☁️✨\nそれにね、ご飯ちゃんと食べてる⁉️🍚🍎🥗ジャンクフードばっかり食べちゃダメだよ🚫🍟🍕おじさん、心配でハラハラしちゃうんだから😰💦{input}ちゃんが元気でいてくれることが、おじさんの一番の願いなんだからね🙏✨\nほらほら、ちゃんと休むのよ😤🛌💤少し叱っちゃったけど、これも{input}ちゃんが大事だからなんだよ🥹💓ね？おじさん、嫌いにならないでね😢💦また連絡するから、元気な報告待ってるよ！📩✨",
-                "{input}ちゃん！🥺💦なんだかおじさん、{input}ちゃんを怒らせちゃったみたいで…ごめんね…😢🙏おじさん、そんなつもりじゃなかったんだよ💔💦ただ、{input}ちゃんのことが心配で、つい余計なこと言っちゃったのかもしれない😖💦\nでもね、おじさんは{input}ちゃんが大好きで、大事だからこそなんだ🥹💕ほんとだよ❗嘘じゃないからね😣✨許してくれたら、おじさん、{input}ちゃんに美味しいスイーツおごっちゃうよ🍰✨どうかな…？😳💓\nもしまだ怒ってたら、おじさんに何でも言っていいからね😢💬おじさん、{input}ちゃんの笑顔が見たいだけなんだよ😊🌸だから…許してくれたら嬉しいな🥺💖また仲良くしてくれるよね…？😥✨"
-            ]
+            説教: [
+                "{input}ちゃん！😤💦ちょっとだけおじさん、言わせてほしいの🥺🙏最近、なんだか無理してるんじゃないカナぁ～？😣💦昨日だって、遅くまで起きてたでしょ⁉️🌙😡ちゃんと寝ないと、お肌にも良くないし💔🥹疲れたら{input}ちゃんの可愛い笑顔が曇っちゃうよ😭☁️✨\nそれにね、ご飯ちゃんと食べてる⁉️🍚🍎🥗ジャンクフードばっかり食べちゃダメだよ🚫🍟🍕おじさん、心配でハラハラしちゃうんだから😰💦{input}ちゃんが元気でいてくれることが、おじさんの一番の願いなんだからね🙏✨\nほらほら、ちゃんと休むのよ😤🛌💤少し叱っちゃったけど、これも{input}ちゃんが大事だからなんだよ🥹💓ね？おじさん、嫌いにならないでね😢💦また連絡するから、元気な報告待ってるよ！📩✨",
+                "初樹ちゃん〜❗️😤\n最近ちょっと無理してない⁉️💦💧\nおじさん、君のこと心配してるんだよ🤔💭\n若いからって油断しちゃダメだよ〜❌‼️\nちゃんと休んで、健康第一に考えなきゃダメだからね💪🌟✨",
+                "初樹ちゃん！😡💥\nおじさん聞いたんだけど、また寝不足なんでしょ⁉️😠💤\nそんなことしてたら体壊しちゃうよ❌💦\nちゃんと寝て🌙💤、しっかり朝ごはんも食べなきゃ🥞🍳☀️✨\n約束だよ、わかった⁉️👊😤",
+                "初樹ちゃん〜！🤨💦\nこの間のことだけど、ちょっと軽率だったんじゃない⁉️🤔💧\nおじさんね、心配で夜も眠れなかったんだから〜‼️😭💔\nちゃんと慎重に考えて行動しなきゃダメだよ❗️💪🔥\nもう心配させないでね、頼むよ‼️💓",
+                "こら、初樹ちゃん‼️😡🔥\n約束守らないなんてダメじゃないか〜❌😭💔\nおじさんはね、君がしっかりした大人になるのを応援してるんだよ📣✨\n次からはちゃんとやるって誓ってくれるよね⁉️🙏😤✨"
+            ],
+            謝罪: [
+                "{input}ちゃん！🥺💦なんだかおじさん、{input}ちゃんを怒らせちゃったみたいで…ごめんね…😢🙏おじさん、そんなつもりじゃなかったんだよ💔💦ただ、{input}ちゃんのことが心配で、つい余計なこと言っちゃったのかもしれない😖💦\nでもね、おじさんは{input}ちゃんが大好きで、大事だからこそなんだ🥹💕ほんとだよ❗嘘じゃないからね😣✨許してくれたら、おじさん、{input}ちゃんに美味しいスイーツおごっちゃうよ🍰✨どうカナ…？😳💓\nもしまだ怒ってたら、おじさんに何でも言っていいからね😢💬おじさん、{input}ちゃんの笑顔が見たいだけなんだよ😊🌸だから…許してくれたら嬉しいな🥺💖また仲良くしてくれるよね…？😥✨",
+                "{input}ちゃん😭🙏💦\n本当にごめんねぇ〜💔💔💧\nおじさん、つい調子に乗っちゃったみたいで💦💦\n深〜〜〜く反省してます🤔💭💔\nこんなポンコツおじさんを、どうか許してぇ〜〜！😭💖✨",
+                "{input}ちゃん〜！😱💦💦\nおじさん、やらかしちゃったカナ⁉️😵‍💫💥\n本当に本当にごめんなさい🙇‍♂️💦💦💧\n夜も眠れないくらい反省してるよ😔🌙💤\n次は絶対気をつけるから、許してくれると嬉しいなぁ🥺🙏💐💖",
+                "{input}ちゃん❣️🌸💦\nおじさん、やっちゃったぁ〜〜😱💥💧\nせっかく仲良しでいたかったのに😭💔💦\nもうこんなミスは絶対しないから‼️💪🔥🔥\nどうかどうか許してぇ〜😭🙏💌✨",
+                "{input}ちゃん〜〜‼️😭💦💦\nおじさん、ほんとにごめんねぇぇぇ〜〜💔💧\nもう自分のバカさ加減に😵‍💫😣頭抱えてるよ〜🤯🌀\nこんなドジなおじさんだけど、見捨てないで〜🙏😭✨\n次は絶対に気をつけるから、どうか許してくれると嬉しいなぁ💖💐✨"
+            ],
+            褒める: [
+                "初樹ちゃん〜‼️😳💖\n今日も本当にかわいいね〜❣️🌸✨\nおじさん、初樹ちゃんみたいに明るくて素敵な人は初めてだよ〜😭💘\n一緒にいるだけで、幸せが倍増しちゃうんだよね！💐🌟",
+                "おぉ〜、初樹ちゃん‼️😲✨\nあんなに難しいことをサラッとこなすなんて、本当にすごいよ❣️💼💡\nおじさん、もう感動しちゃって目がウルウルしてる🥹💖✨\n君は本当に才能の塊だね〜🎉🌟",
+                "さすが初樹ちゃん❗️👏🎶\nそのセンス、さすがって言うしカナいよね✨🎨💡\nおじさんも見習いたいけど、到底カナわないなぁ😭💖\n君は特別な存在だよ、間違いない‼️🌟💖",
+                "初樹ちゃん〜‼️😆💖\nおじさん、君のことね、ほんとに尊敬してるんだよ🥺🙏💕\n君みたいに素敵な人になりたいって、いつも思ってるんだ🥹💭💖\n初樹ちゃんがいるから、おじさんも頑張れるんだよね！💪🔥🌟",
+                "うわぁ〜、初樹ちゃん‼️😆✨\n今日もキラキラ輝いてるね✨🌟💖\nおじさんはね、君の笑顔を見るたびに元気100倍になっちゃうんだ💪🔥\nこれからもそのままの初樹ちゃんでいてね！🌸💝",
+            ]    
         };
 
         function replaceText() {
@@ -39,7 +150,7 @@
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';
 
-            for (const [genre, templates] of Object.entries(templates)) {
+            for (const [genre, templates] of Object.entries(templateData)) {
                 const genreDiv = document.createElement('div');
                 genreDiv.innerHTML = `<h2>${genre}</h2>`;
                 templates.forEach(template => {
@@ -54,6 +165,29 @@
                 });
                 resultsDiv.appendChild(genreDiv);
             }
+
+            document.getElementById('genreButtons').style.display = 'block';
+        }
+
+        function filterTemplates(genre) {
+            const inputText = document.getElementById('inputText').value;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            const templates = templateData[genre];
+            const genreDiv = document.createElement('div');
+            genreDiv.innerHTML = `<h2>${genre}</h2>`;
+            templates.forEach(template => {
+                const resultString = template.split("{input}").join(inputText);
+                const p = document.createElement('p');
+                p.innerText = resultString;
+                const copyButton = document.createElement('button');
+                copyButton.innerText = 'コピー';
+                copyButton.onclick = () => copyToClipboard(resultString);
+                genreDiv.appendChild(p);
+                genreDiv.appendChild(copyButton);
+            });
+            resultsDiv.appendChild(genreDiv);
         }
 
         function copyToClipboard(text) {
