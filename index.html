@@ -35,6 +35,9 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        .button-container {
+            text-align: center;
+        }
         button {
             padding: 10px 20px;
             border: none;
@@ -79,7 +82,9 @@
     <h1>おじさん構文メーカー</h1>
     <form id="inputForm">
         <input type="text" id="inputText" placeholder="名前を入力してください" name="inputText">
-        <button type="button" onclick="replaceText()">決定</button>
+        <div class="button-container">
+            <button type="button" onclick="replaceText()">決定</button>
+        </div>
     </form>
     <div id="genreButtons" style="display: none;">
         <button type="button" onclick="filterTemplates('朝')">朝</button>
@@ -139,7 +144,7 @@
             褒める: [
                 "{input}ちゃん〜‼️😳💖\n今日も本当にかわいいね〜❣️🌸✨\nおじさん、{input}ちゃんみたいに明るくて素敵な人は初めてだよ〜😭💘\n一緒にいるだけで、幸せが倍増しちゃうんだよね！💐🌟",
                 "おぉ〜、{input}ちゃん‼️😲✨\nあんなに難しいことをサラッとこなすなんて、本当にすごいよ❣️💼💡\nおじさん、もう感動しちゃって目がウルウルしてる🥹💖✨\n{input}ちゃんは本当に才能の塊だね〜🎉🌟",
-                "さすが{input}ちゃん❗️👏🎶\nそのセンス、さすがって言うしカナいよね✨🎨💡\nおじさんも見習いたいけど、到底カナわないなぁ😭💖\n{input}ちゃんは特別な存在だよ、間違いない‼️🌟💖",
+                "さすが{input}ちゃん❗️👏🎶\nそのセンス、さすがって言うしかないよね✨🎨💡\nおじさんも見習いたいけど、到底かなわないなぁ😭💖\n{input}ちゃんは特別な存在だよ、間違いない‼️🌟💖",
                 "{input}ちゃん〜‼️😆💖\nおじさん、{input}ちゃんのことね、ほんとに尊敬してるんだよ🥺🙏💕\n{input}ちゃんみたいに素敵な人になりたいって、いつも思ってるんだ🥹💭💖\n{input}ちゃんがいるから、おじさんも頑張れるんだよね！💪🔥🌟",
                 "うわぁ〜、{input}ちゃん‼️😆✨\n今日もキラキラ輝いてるね✨🌟💖\nおじさんはね、{input}ちゃんの笑顔を見るたびに元気100倍になっちゃうんだ💪🔥\nこれからもそのままの{input}ちゃんでいてね！🌸💝",
             ]    
